@@ -122,6 +122,8 @@ classdef InitializePopulation < handle
                     end
                 end
             end
+            obj.nodes_dis_charging=zeros(size(obj.charging_locationx,1)-1,gaConfig.PopulationSize);
+            obj.cost_dis=[];
             % Calculate Euclidean between each nodes
             for j= 1: gaConfig.PopulationSize
                 for i= 1: obj.chromo_number
@@ -137,16 +139,17 @@ classdef InitializePopulation < handle
                 % chromo_charging=[chromo_charging;obj.chromo(end)];
                 % Cost function (distance)
                 
-                obj.cost_dis(1,j)=length(nonzeros(obj.chromo(:,j)));
+                obj.cost_dis(j)=length(nonzeros(obj.chromo(:,j)));
                 
                 % Calculate the travel distance of charging robots
                 
-                % for i= 1: size(obj.charging_locationx,1)-1
-                %     if obj.charging_locationx(i+1,j)~= 0
-                %         obj.nodes_dis_charging(i,j)=norm([obj.charging_locationx(i,j),obj.charging_locationy(i,j)]-[obj.charging_locationx(i+1,j),obj.charging_locationy(i+1,j)]);
-                %     end
-                % end
-                % obj.cost_dis_charging(1,j)=sum(obj.nodes_dis_charging(:,j));
+                for i= 1: size(obj.charging_locationx,1)-1
+                    if obj.charging_locationx(i+1,j)~= 0
+                        obj.nodes_dis_charging(i,j)=norm([obj.charging_locationx(i,j),obj.charging_locationy(i,j)]-[obj.charging_locationx(i+1,j),obj.charging_locationy(i+1,j)]);
+                    end
+
+                end
+                obj.cost_dis_charging(1,j)=sum(obj.nodes_dis_charging(:,j));
                 
                 % Calculate path coverage
                 % count=0;
@@ -252,7 +255,7 @@ classdef InitializePopulation < handle
                 chromosome1 = obj.chromo(:,iSelected);
                 candidates = 1 + fix(rand(1,gaConfig.TournamentSize)*gaConfig.PopulationSize);
                 candidateFitnesses = obj.fitness(candidates);
-                [~, sortedIndexes] = sort(candidateFitnesses,1,'descend');
+                [~, sortedIndexes] = sort(candidateFitnesses,2,'descend');
                 selectionProbabilityMatrix = tournamentSelectionParameter*((1-tournamentSelectionParameter).^(0:gaConfig.TournamentSize-2)');
                 r = rand;
                 iSelected = candidates(sortedIndexes(r>selectionProbabilityMatrix));
@@ -293,25 +296,26 @@ classdef InitializePopulation < handle
             chargingx=nonzeros(obj.charging_locationx(:,obj.bestIndividualIndex));
             chargingy=nonzeros(obj.charging_locationy(:,obj.bestIndividualIndex));
             plot(chargingx,chargingy,'-.k')
+            title(obj.minimumFitness)
             
         end
         
-        function Mutating(obj,map,gaConfig)
+        function Mutating(obj,gaConfig,randIndexes)
             indexes = rand(size(obj.chromo))<gaConfig.mutationProbability  ;               % Index for Mutations
             
             temp=round(4*rand(obj.gene_length,gaConfig.PopulationSize));
             
-            %fix the starting point finishing point and best chromosome
+            %fix the starting point finishing point 
             % indexes(1,:)=0;
             % indexes(end,:)=0;
-            indexes(:,obj.bestIndividualIndex)=0;
+            
             obj.newPopulation(indexes) =temp(indexes);
             
             % = tempPopulation(indexes)*-1+1;                     % Bit Flip Occurs
             %% PRESERVATION OF PREVIOUS BEST SOLUTION
             bestChromosome =obj.chromo(:,obj.bestIndividualIndex);
             
-            randIndexes = ceil(rand(1,gaConfig.numberOfReplications).*size(obj.chromo,2));
+            
             obj.newPopulation(:,randIndexes) = repmat(bestChromosome,1,gaConfig.numberOfReplications);
             obj.chromo=obj.newPopulation;
             

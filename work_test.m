@@ -30,8 +30,12 @@ for agent_number = 1:number_of_spicies
     SetColor(population(agent_number),Colors(agent_number,:));
     Evaluating(population(agent_number),map,gaConfig);
 end
-
-
+% Generate charging robots
+number_of_charging_robots=4;
+for chargers_number=1:number_of_charging_robots
+	chargers(chargers_number)=charging_robots(Colors(chargers_number,:),chargers_number);
+end
+% First evaluation
 optimizor=galayer(population,map,gaConfig);
 for agent_number = 1:number_of_spicies
 	population(agent_number).fitness=optimizor.fitness;
@@ -42,11 +46,12 @@ for agent_number = 1:number_of_spicies
 	Selecting(population(agent_number),gaConfig,0.5);
 end
 % Mutate
+randIndexes = ceil(rand(1,gaConfig.numberOfReplications).*gaConfig.PopulationSize);
 for agent_number = 1:number_of_spicies
-	Mutating(population(agent_number),map,gaConfig)
+	Mutating(population(agent_number),gaConfig,randIndexes)
 end
 
-generation=500;
+generation=5000;
 for i=1:generation
 	for agent_number = 1:number_of_spicies
 	    % population(agent_number)= InitializePopulation(map, gaConfig);
@@ -61,9 +66,17 @@ for i=1:generation
 		Selecting(population(agent_number),gaConfig,0.5);
 	end
 		% Mutate
+		randIndexes = ceil(rand(1,gaConfig.numberOfReplications).*gaConfig.PopulationSize);
 	for agent_number = 1:number_of_spicies
-		Mutating(population(agent_number),map,gaConfig)
+		Mutating(population(agent_number),gaConfig,randIndexes)
 	end
+	for agent_number = 1:number_of_spicies
+	hold on
+	Ploting(population(agent_number),map)
+	plot(map.mission_location(:,1),map.mission_location(:,2),'.')
+	end
+
+	drawnow
 end
 optimizor=galayer(population,map,gaConfig);
 for agent_number = 1:number_of_spicies
@@ -72,6 +85,6 @@ for agent_number = 1:number_of_spicies
 	plot(map.mission_location(:,1),map.mission_location(:,2),'.')
 end
 toc
-obj=population;
+% obj=population;
 
 obj=optimizor;
