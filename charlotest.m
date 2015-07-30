@@ -1,8 +1,8 @@
 % clear all
 % close all
 for nn= 1:gaConfig.NumberofChargers
-    chargers(nn).locationx=zeros(temp,gaConfig.PopulationSize);
-    chargers(nn).locationy=zeros(temp,gaConfig.PopulationSize);
+    chargers(nn).locationx=zeros(sub(1).chromo_number*gaConfig.NumberofChargers,gaConfig.PopulationSize);
+    chargers(nn).locationy=zeros(sub(1).chromo_number*gaConfig.NumberofChargers,gaConfig.PopulationSize);
 end
 
 for i = 1: gaConfig.PopulationSize

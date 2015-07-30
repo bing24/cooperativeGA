@@ -36,7 +36,7 @@ for chargers_number=1:number_of_charging_robots
 	chargers(chargers_number)=charging_robots(Colors(chargers_number,:),chargers_number);
 end
 % First evaluation
-optimizor=galayer(population,map,gaConfig);
+optimizor=galayer(population,map,gaConfig,chargers);
 for agent_number = 1:number_of_spicies
 	population(agent_number).fitness=optimizor.fitness;
 	population(agent_number).bestIndividualIndex=optimizor.bestIndividualIndex;
@@ -57,7 +57,7 @@ for i=1:generation
 	    % population(agent_number)= InitializePopulation(map, gaConfig);
 	    Evaluating(population(agent_number),map,gaConfig);
 	end
-		optimizor=galayer(population,map,gaConfig);
+		optimizor=galayer(population,map,gaConfig,chargers);
 	for agent_number = 1:number_of_spicies
 		population(agent_number).fitness=optimizor.fitness;
 		population(agent_number).bestIndividualIndex=optimizor.bestIndividualIndex;

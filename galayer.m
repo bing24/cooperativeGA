@@ -16,10 +16,10 @@ classdef galayer < handle
     
     methods
         
-        function  optimizor= galayer(sub, map, gaConfig)
+        function  optimizor= galayer(sub, map, gaConfig,chargers)
             for nn= 1:gaConfig.NumberofChargers
-                    chargers(nn).locationx=zeros(temp,gaConfig.PopulationSize);
-                    chargers(nn).locationy=zeros(temp,gaConfig.PopulationSize);
+                    chargers(nn).locationx=zeros(sub(1).chromo_number*gaConfig.NumberofChargers,gaConfig.PopulationSize);
+                    chargers(nn).locationy=zeros(sub(1).chromo_number*gaConfig.NumberofChargers,gaConfig.PopulationSize);
                 end
             for i=1:gaConfig.PopulationSize
                 % Calculate the total distance for all working robots
@@ -34,7 +34,7 @@ classdef galayer < handle
                 
                     temp=[];
                     for j = 1: gaConfig.NumberofWorkers
-                        lengthofchro(j)=length(nonzeros(population(j).charging_locationx(:,i)));
+                        lengthofchro(j)=length(nonzeros(sub(j).charging_locationx(:,i)));
                         temp=max(lengthofchro);
                     end
                     for nn= 1:gaConfig.NumberofChargers
@@ -46,8 +46,8 @@ classdef galayer < handle
                         for ii= 1: gaConfig.NumberofWorkers
                             if j <= lengthofchro(ii)
                                 pick=ceil(rand*gaConfig.NumberofChargers);
-                                chargers(pick).temppx=cat(1,chargers(pick).temppx,obj(ii).charging_locationx(j,i));
-                                chargers(pick).temppy=cat(1,chargers(pick).temppy,obj(ii).charging_locationy(j,i));
+                                chargers(pick).temppx=cat(1,chargers(pick).temppx,sub(ii).charging_locationx(j,i));
+                                chargers(pick).temppy=cat(1,chargers(pick).temppy,sub(ii).charging_locationy(j,i));
                             end
                         end
                     end
@@ -57,7 +57,7 @@ classdef galayer < handle
                     end
                 
                 
-                 optimizor.distance_charging(i)=;
+                 % optimizor.distance_charging(i)=;
                 
                 
                 
