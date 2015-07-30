@@ -1,6 +1,8 @@
 classdef charging_robots < handle
 
 properties
+        temppx
+        temppy
 		ID
         color
         cover
