@@ -287,16 +287,13 @@ classdef InitializePopulation < handle
             end
         end
         
-        function Ploting(obj,map)
+        function Ploting(obj)
             % hold off
             plot(obj.currentx(:,obj.bestIndividualIndex),obj.currenty(:,obj.bestIndividualIndex),'Color',obj.color,'linewidth',3)
             % hold on
-            contour(map.matrix,1,'black','linewidth',5)
+%             contour(map.matrix,1,'black','linewidth',5)
             title(obj.minimumFitness)
-            chargingx=nonzeros(obj.charging_locationx(:,obj.bestIndividualIndex));
-            chargingy=nonzeros(obj.charging_locationy(:,obj.bestIndividualIndex));
-            plot(chargingx,chargingy,'-.k')
-            title(obj.minimumFitness)
+            
             
         end
         

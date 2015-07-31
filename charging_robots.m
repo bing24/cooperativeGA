@@ -9,7 +9,8 @@ properties
         charging_index
         locationx
         locationy
-        
+        nodes_distance
+        total_distance
     end
     
     methods
@@ -59,6 +60,14 @@ properties
                 end
             end
         end
-
+        
+        function Ploting(obj,optimizor)
+            chargingx=nonzeros(obj.locationx(:,optimizor.bestIndividualIndex));
+            chargingy=nonzeros(obj.locationy(:,optimizor.bestIndividualIndex));
+            plot(chargingx,chargingy,'-.k')
+            title(optimizor.minimumFitness)
+            
+        end %function
+        
     end %methods
 end %classdef

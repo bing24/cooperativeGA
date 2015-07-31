@@ -148,10 +148,10 @@ classdef galayer < handle
             for agent_number = 1:gaConfig.NumberofWorkers
                 hold on
                 Ploting(workers(agent_number))
-                
+                plot(map.mission_location(:,1),map.mission_location(:,2),'.')
             end
             for charger_number = 1:gaConfig.NumberofChargers
-                Ploting(chargers(charger_number),obj)
+                Ploting(chargers(charger_number),optimizor)
             end
             
         end

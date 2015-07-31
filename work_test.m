@@ -20,6 +20,9 @@ gaConfig.TournamentSize=10;
 gaConfig.mutationProbability=0.01;
 gaConfig.numberOfReplications = 2;
 
+contour(map.matrix,1,'black','linewidth',5)
+plot(map.mission_location(:,1),map.mission_location(:,2),'.')
+
 % Generatue initial populations
 initials=[3,2;3,7;8,9;10,7;12,3];
 Colors=[1 1 0;1 0 1;0 1 1;1 0 0;0 0 1];
@@ -51,7 +54,7 @@ for agent_number = 1:number_of_spicies
 	Mutating(population(agent_number),gaConfig,randIndexes)
 end
 
-generation=5000;
+generation=50;
 for i=1:generation
 	for agent_number = 1:number_of_spicies
 	    % population(agent_number)= InitializePopulation(map, gaConfig);
@@ -70,20 +73,11 @@ for i=1:generation
 	for agent_number = 1:number_of_spicies
 		Mutating(population(agent_number),gaConfig,randIndexes)
 	end
-	for agent_number = 1:number_of_spicies
-	hold on
-	Ploting(population(agent_number),map)
-	plot(map.mission_location(:,1),map.mission_location(:,2),'.')
-	end
-
+	plotall(optimizor,population,chargers,gaConfig)
 	drawnow
 end
 optimizor=galayer(population,map,gaConfig);
-for agent_number = 1:number_of_spicies
-	hold on
-	Ploting(population(agent_number),map)
-	plot(map.mission_location(:,1),map.mission_location(:,2),'.')
-end
+plotall(optimizor,population,chargers,gaConfig)
 toc
 % obj=population;
 
