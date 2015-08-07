@@ -21,6 +21,7 @@ gaConfig.mutationProbability=0.01;
 gaConfig.numberOfReplications = 2;
 
 contour(map.matrix,1,'black','linewidth',5)
+hold on
 plot(map.mission_location(:,1),map.mission_location(:,2),'.')
 
 % Generatue initial populations
@@ -54,7 +55,7 @@ for agent_number = 1:number_of_spicies
 	Mutating(population(agent_number),gaConfig,randIndexes)
 end
 
-generation=50;
+generation=500;
 for i=1:generation
 	for agent_number = 1:number_of_spicies
 	    % population(agent_number)= InitializePopulation(map, gaConfig);

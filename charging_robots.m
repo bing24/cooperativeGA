@@ -11,6 +11,8 @@ properties
         locationy
         nodes_distance
         total_distance
+        judger
+        figure_handle
     end
     
     methods
@@ -62,9 +64,12 @@ properties
         end
         
         function Ploting(obj,optimizor)
+            if ishandle(obj.figure_handle)
+                delete(obj.figure_handle)
+            end
             chargingx=nonzeros(obj.locationx(:,optimizor.bestIndividualIndex));
             chargingy=nonzeros(obj.locationy(:,optimizor.bestIndividualIndex));
-            plot(chargingx,chargingy,'-.k')
+            obj.figure_handle=plot(chargingx,chargingy,'-.k');
             title(optimizor.minimumFitness)
             
         end %function

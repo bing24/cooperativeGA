@@ -34,6 +34,7 @@ classdef InitializePopulation < handle
         agent_number=5;
         cost_dis;
         cost_dis_charging;
+        figure_handle
     end
     
     methods
@@ -288,8 +289,11 @@ classdef InitializePopulation < handle
         end
         
         function Ploting(obj)
+            if ishandle(obj.figure_handle)
+                delete(obj.figure_handle)
+            end
             % hold off
-            plot(obj.currentx(:,obj.bestIndividualIndex),obj.currenty(:,obj.bestIndividualIndex),'Color',obj.color,'linewidth',3)
+            obj.figure_handle=plot(obj.currentx(:,obj.bestIndividualIndex),obj.currenty(:,obj.bestIndividualIndex),'Color',obj.color,'linewidth',3);
             % hold on
 %             contour(map.matrix,1,'black','linewidth',5)
             title(obj.minimumFitness)

@@ -83,12 +83,61 @@ classdef galayer < handle
                     end
                 end
                 optimizor.cover(i)=count/size(map.mission_num,1);
+                 % calculate charging time and operating time
+                for j=1:optimizor.agent_number
+                    
+                count=1;
+                ii=1;
+                gg=1;
+                temp=[];
+                tempp=[];
+                while count < sub(j).gene_length
+                    
+                    if sub(j).chromo(count,i) == 0
+                        cc=1;
+                        
+                        while sub(j).chromo(count,i)==0 & count < sub(j).gene_length
+                            temp(ii)=cc;
+                            cc=cc+1;
+                            count=count+1;
+                            
+                        end
+                        ii=ii+1;
+                    else
+                        dd=1;
+                        while sub(j).chromo(count,i)~=0 & count < sub(j).gene_length
+                            tempp(gg)=dd;
+                            dd=dd+1;
+                            count=count+1;
+                        end
+                        gg=gg+1;
+                    end
+                end
                 
-                % optimizor.charging_enough(i)=1;
-                % optimizor.judger(i)=[];
-                optimizor.fitness(i)=(optimizor.distance_working(i)+optimizor.distance_charging(i))/optimizor.cover(i);
+                if length(temp)>length (tempp)
+                    temp=temp(1:end-1);
+                elseif length(temp)<length(tempp)
+                    tempp=tempp(1:end-1);
+                end
                 
-                % optimizor.fitness(i)=(optimizor.distance_working(i)+optimizor.distance_charging(i))/optimizor.cover(i)/optimizor.charging_enough(i)*optimizor.judger(i);
+                sub(j).charging_enough(1,i)=sum(temp>tempp)/length(temp);
+                charging_enough_temp(j)=sub(j).charging_enough(1,i);
+                end
+                % Consider the maximum speed constraint
+                for j = 1:gaConfig.NumberofChargers
+                if sum(chargers(j).nodes_distance(:,i)>10)==0
+                    chargers(j).judger(i)=1;
+                else
+                    chargers(j).judger(i)=100;
+                end
+                judger_temp(j)=chargers(j).judger(i);                
+                end
+
+                optimizor.charging_enough(i)=sum(charging_enough_temp)/optimizor.agent_number;
+                optimizor.judger(i)=sum(judger_temp)/gaConfig.NumberofChargers;
+                % optimizor.fitness(i)=(optimizor.distance_working(i)+optimizor.distance_charging(i))/optimizor.cover(i)/optimizor.charging_enough(i);
+                
+                optimizor.fitness(i)=(optimizor.distance_working(i)+optimizor.distance_charging(i))/optimizor.cover(i)/optimizor.charging_enough(i)*optimizor.judger(i);
             end
             [optimizor.minimumFitness, optimizor.bestIndividualIndex] = min(optimizor.fitness);
             fprintf('Minimum Fitness: %d\n',optimizor.minimumFitness);
